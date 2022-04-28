@@ -2,9 +2,10 @@
 import random
 
 suits = ('Hearts', 'Diamonds', 'Spades', 'Clubs')
-ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack', 'Queen', 'King', 'Ace')
-values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8, 'Nine':9, 'Ten':10, 'Jack':10,
-'Queen':10, 'King':10, 'Ace' :11}
+ranks = ('Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Jack',
+'Queen', 'King', 'Ace')
+values = {'Two':2, 'Three':3, 'Four':4, 'Five':5, 'Six':6, 'Seven':7, 'Eight':8,
+'Nine':9, 'Ten':10, 'Jack':10,'Queen':10, 'King':10, 'Ace' :11}
 
 playing = True
 
@@ -80,7 +81,7 @@ def hit(deck, hand):
 def hit_or_stand(deck,hand):
     global playing
     while True:
-        x = input("Would you like to Hit or Stand? Enter 'h' or 's' ")
+        x = input("Would you like to Hit or Stand? Enter 'h' or 's': ")
         if x[0].lower() == 'h':
             hit(deck,hand)
         elif x[0].lower() == 's':
@@ -128,50 +129,44 @@ while True:
     deck.shuffle()
     player_chips = Chips()
 
-    player_hand = Hand()
-    player_hand.add_card(deck.deal())
-    player_hand.add_card(deck.deal())
+    player1 = Hand()
+    player1.add_card(deck.deal())
+    player1.add_card(deck.deal())
 
-    dealer_hand = Hand()
-    dealer_hand.add_card(deck.deal())
-    dealer_hand.add_card(deck.deal())
+    dealer = Hand()
+    dealer.add_card(deck.deal())
+    dealer.add_card(deck.deal())
 
-    take_bet(player_chips) #prompts the player for the bet amount
-    show_some(player_hand,dealer_hand) # Show cards (but keep one dealer card hidden)
+    take_bet(player_chips)                      #prompts the player for the bet amount
+    show_some(player1,dealer)          # Show cards (but keep one dealer card hidden)
 
-    while playing:  # recall this variable from our hit_or_stand function
+    while playing:
 
-        # Prompt for Player to Hit or Stand
-        hit_or_stand(deck,player_hand)
+        hit_or_stand(deck,player1)          # Prompt for Player to Hit or Stand
 
-        # Show cards (but keep one dealer card hidden)
-        show_some(player_hand,dealer_hand)
+        show_some(player1,dealer)      # Show cards (but keep one dealer card hidden)
 
-        # If player's hand exceeds 21, run player_busts() and break out of loop
-        if player_hand.hand_value > 21:
-            player_busts(player_hand,dealer_hand,player_chips)
+        if player1.hand_value > 21:         # If player's hand exceeds 21, run player_busts() and break out of loop
+            player_busts(player1,dealer,player_chips)
             break
-    # If Player hasn't busted, play Dealer's hand until Dealer reaches 17
-    if player_hand.hand_value <= 21:
+    if player1.hand_value <= 21:            # If Player hasn't busted, play Dealer's hand until Dealer reaches 17
 
-        while dealer_hand.hand_value < 17:
-            hit(deck,dealer_hand)
+        while dealer.hand_value < 17:
+            hit(deck,dealer)
 
-        # Show all cards
-        show_all(player_hand,dealer_hand)
+        show_all(player1,dealer)       # Show all cards
 
-        # Run different winning scenarios
-        if dealer_hand.hand_value > 21:
-            dealer_busts(player_hand,dealer_hand,player_chips)
+        if dealer.hand_value > 21:         # Run different winning scenarios
+            dealer_busts(player1,dealer,player_chips)
 
-        elif dealer_hand.hand_value > player_hand.hand_value:
-            dealer_wins(player_hand,dealer_hand,player_chips)
+        elif dealer.hand_value > player1.hand_value:
+            dealer_wins(player1,dealer,player_chips)
 
-        elif dealer_hand.hand_value < player_hand.hand_value:
-            player_wins(player_hand,dealer_hand,player_chips)
+        elif dealer.hand_value < player1.hand_value:
+            player_wins(player1,dealer,player_chips)
 
         else:
-            push(player_hand,dealer_hand)
+            push(player1,dealer)
 
     # Inform Player of their chips total
     print("\nPlayer's winnings stand at",player_chips.total)
